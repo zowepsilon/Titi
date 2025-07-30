@@ -82,15 +82,11 @@ class Typst(commands.Cog):
         if message.author.id != self.bot.config["texit_id"]:
             return
 
-        print(f"{message = }")
-
         if len(message.content) < 5:
             return
 
         if '*' == message.content[0] == message.content[1] == message.content[-1] == message.content[-2]:
             user_id = self.bot.nickname_cache.get_user_from_nick(message.content[2:-2])
-            print(f"{message.content = }")
-            print(f"{message.content[2:-2] = }")
             if self.db.get(user_id):
                 await message.delete()
 
