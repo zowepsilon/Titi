@@ -102,6 +102,8 @@ class Typst(commands.Cog):
     async def on_raw_reaction_add(self, payload):
         if payload.emoji != '❌':
             return
+
+        print(payload, self.renders)
         
         for (source_id, rendered) in self.renders.items():
             if rendered.id == payload.message_id:
