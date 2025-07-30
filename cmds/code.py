@@ -48,15 +48,13 @@ class Code(commands.Cog):
 
         if code.startswith("```rust"):
             code = code[7:-3]
+        if code.startswith("```rs"):
+            code = code[7:-3]
         elif code.startswith("```"):
             code = code[3:-3]
     
         if "fn main()" not in code:
-            code = f"""
-            fn main() {{
-                {code}
-            }}
-            """
+            code = f"fn main() {{\n{code}\n}}"""
 
         code = code.replace("\\", "\\\\").replace("\n", "\\n").replace("\"", "\\\"")
 
@@ -94,6 +92,7 @@ class Code(commands.Cog):
 
                                 state.out += payload
                                 await state.update_message()
+                                n
 
                             case "output/execute/wsExecuteStdout":
                                 payload = res["payload"]

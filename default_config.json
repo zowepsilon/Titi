@@ -1,18 +1,8 @@
 {
-    "secrets": {
-        "discord": "<your Discord bot token>"
-    },
+    "token": "<your Discord bot token>",
     "database": "data.db",
     "prefix": "?",
     "run_dir": "./run",
     "developers": [],
-    "moderators": [],
-    "vocabulaire_id": 0,
-    "starboard_id": 0,
-    "starboard_emoji_ids": [],
-    "debug": false,
-    "replies": [],
-    "blacklist": [],
-    "birthday_channel": 0,
-    "birthday_role": 0
+    "debug": false
 }

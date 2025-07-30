@@ -45,10 +45,6 @@ class Bot(commands.Bot):
         self.cursor = self.db.cursor()
 
         self.nickname_cache = NicknameCache(self.cursor, "NicknameCache")
-        self.word_counter = WordCounter(self.cursor, "WordCounts")
-
-        self.startup_time = time.gmtime()
-        self.reload_time = time.gmtime()
 
         super().__init__(
             command_prefix=commands.when_mentioned_or(self.config["prefix"]),
@@ -66,7 +62,7 @@ class Bot(commands.Bot):
         os.makedirs(self.config["run_dir"], exist_ok=True)
         os.chdir(self.config["run_dir"])
 
-        super().run(self.config["secrets"]["discord"])
+        super().run(self.config["token"])
         
         print("\nSaving data...")
 
@@ -80,17 +76,9 @@ class Bot(commands.Bot):
         return user_id in self.config["developers"]
 
 bot = Bot(modules=(
-    "cmds.admin",
-    "cmds.birthday",
-    "cmds.chat",
     "cmds.code",
     "cmds.dev",
     "cmds.help",
-    "cmds.misc",
-    "cmds.pendu",
-    "cmds.sanity",
-    "cmds.starboard",
-    "cmds.stats",
     "cmds.typst",
 ))
 
