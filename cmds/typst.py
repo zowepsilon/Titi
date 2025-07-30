@@ -19,7 +19,7 @@ layout = """
 
 #set align(left)
 
-#set page(width: 250pt) // if #page.width > 300pt
+#set page(width: 250pt)
 
 #set text(
   fill: white,
@@ -85,7 +85,7 @@ class Typst(commands.Cog):
         if message.author.bot or len(message.content) == 0 or message.content[0] == '?' or message.content.startswith(",tex"):
             return
         
-        if message.content.count('$') >= 2:
+        if message.content.count('$') >= 2 and message.content.count('```') == 0:
             await self.process(message.channel, message.id, message.content)
 
     @commands.Cog.listener()
@@ -94,9 +94,27 @@ class Typst(commands.Cog):
 
         if message.author.bot or len(message.content) == 0 or message.content[0] == '?':
             return
-        
-        if message.content.count('$') >= 2:
+
+        if message.content.count('$') >= 2 and message.content.count('```'):
             await self.process(message.channel, message.id, message.content)
         
+    @commands.Cog.listener()
+    async def on_raw_reaction_add(self, payload):
+        if payload.emoji != '❌':
+            return
+        
+        for (source_id, rendered) in self.renders.items():
+            if rendered.id == payload.message_id:
+                break
+        else:
+            return
+            
+        source = await self.bot.get_channel(payload.channel_id).fetch_message(source_id)
+
+        if source.author.id == payload.user_id:
+            message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
+            await message.delete()
+
+
 def setup(bot):
     bot.add_cog(Typst(bot))
