@@ -66,7 +66,6 @@ class NicknameCache:
             SET Name = ?
         """,  [user_id, name, name])
 
-
 class TexitCompatDb:
     def __init__(self, cursor, table_name):
         self.cursor = cursor
@@ -87,7 +86,7 @@ class TexitCompatDb:
         """, [user_id])
         
         result = self.cursor.fetchone()
-        return None if result is None else result[0] == 1
+        return None if result is None else result[0] != 0
 
     def set(self, user_id: int, texit_disabled: bool):
         self.cursor.execute(f"""

@@ -78,20 +78,8 @@ class Typst(commands.Cog):
         self.renders[message_id] = (user_id, await ctx.send(text, file=file))
         rendered.close()
 
-    @commands.command()
-    @debuggable
-    async def typst(self, ctx, *, content: str = None):
-        if content is None:
-            if ctx.message.reference is None:
-                return await ctx.send("Il faut répondre à un message contenant du code ou donner le code en argument !")
-
-            content = (await ctx.fetch_message(ctx.message.reference.message_id)).content
-            await self.process(ctx, ctx.message.reference.message_id, ctx.author.id, content)
-        else:
-            await self.process(ctx, ctx.message.id, ctx.author.id, content)
-
     async def on_message_bot(self, message):
-        if message.author.id != self.config["texit_id"]:
+        if message.author.id != self.bot.config["texit_id"]:
             return
 
         if len(message.content) < 5:
@@ -136,7 +124,28 @@ class Typst(commands.Cog):
                     await message.delete()
 
                 break
+
+    @commands.command()
+    @debuggable
+    async def typst(self, ctx, *, content: str = None):
+        if content is None:
+            if ctx.message.reference is None:
+                return await ctx.send("Il faut répondre à un message contenant du code ou donner le code en argument !")
+
+            content = (await ctx.fetch_message(ctx.message.reference.message_id)).content
+            await self.process(ctx, ctx.message.reference.message_id, ctx.author.id, content)
+        else:
+            await self.process(ctx, ctx.message.id, ctx.author.id, content)
             
+    @commands.command()
+    @debuggable
+    async def math(self, ctx, mode: str = None):
+        if mode == "typst":
+            self.db.set(ctx.author.id, True)
+        elif mode == "latex" or mode == "texit":
+            self.db.set(ctx.author.id, False)
+        else:
+            await ctx.send("Modes : `typst` et `latex`")
 
 def setup(bot):
     bot.add_cog(Typst(bot))
