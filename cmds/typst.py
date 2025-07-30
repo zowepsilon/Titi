@@ -8,7 +8,7 @@ import typst
 import asyncio
 import concurrent.futures
 
-from utils import debuggable, TexitOptionDb
+from utils import debuggable, TexitCompatDb
 
 layout = """
 #set page(
