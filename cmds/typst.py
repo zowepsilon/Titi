@@ -37,11 +37,12 @@ class Typst(commands.Cog):
         self.bot = bot
         self.repeat = True
 
-        self.renders: dict[int, discord.Message] = {}
+        self.renders: dict[int, (int, discord.Message)] = {}
 
-    async def process(self, ctx, message_id: int, content: str):
+    async def process(self, ctx, message_id: int, user_id: int, content: str):
         if message_id in self.renders.keys():
-            await self.renders[message_id].delete()
+            await self.renders[message_id][1].delete()
+            del self.renders[message_id]
         
         if content.startswith("?typst "):
             content = content[7:]
@@ -64,7 +65,7 @@ class Typst(commands.Cog):
             return
 
         file = discord.File(rendered, "rendered.png")
-        self.renders[message_id] = await ctx.send(file=file)
+        self.renders[message_id] = (user_id, await ctx.send(file=file))
         rendered.close()
 
     @commands.command()
@@ -104,18 +105,15 @@ class Typst(commands.Cog):
             return
 
         
-        for (source_id, rendered) in self.renders.items():
+        for (source_id, (author_id, rendered)) in self.renders.items():
             if rendered.id == payload.message_id:
+
+                if author_id == payload.user_id:
+                    message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
+                    await message.delete()
+
                 break
-        else:
-            return
             
-        source = await self.bot.get_channel(payload.channel_id).fetch_message(source_id)
-
-        if source.author.id == payload.user_id:
-            message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
-            await message.delete()
-
 
 def setup(bot):
     bot.add_cog(Typst(bot))
