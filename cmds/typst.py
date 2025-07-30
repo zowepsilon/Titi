@@ -82,11 +82,14 @@ class Typst(commands.Cog):
         if message.author.id != self.bot.config["texit_id"]:
             return
 
+        print(f"{message = }")
+
         if len(message.content) < 5:
             return
 
         if '*' == message.content[0] == message.content[1] == message.content[-1] == message.content[-2]:
             user_id = self.bot.nickname_cache.get_user_from_nick(message.content[2:-2])
+            print(f"{user_id = }")
             if self.db.get(user_id):
                 await message.delete()
 
@@ -140,10 +143,14 @@ class Typst(commands.Cog):
     @commands.command()
     @debuggable
     async def math(self, ctx, mode: str = None):
+        mode = None if mode is None else mode.lower()
+
         if mode == "typst":
             self.db.set(ctx.author.id, True)
+            await ctx.send("Tu utilises maintenant Typst !")
         elif mode == "latex" or mode == "texit":
             self.db.set(ctx.author.id, False)
+            await ctx.send("Tu utilises maintenant LaTeX !")
         else:
             await ctx.send("Modes : `typst` et `latex`")
 
