@@ -14,7 +14,7 @@ class Developer(commands.Cog):
     @debuggable
     async def reload_names(self, ctx):
         if not self.bot.is_dev(ctx.author.id):
-            return await ctx.send("You need to be a developer to do that!")
+            return await ctx.send("Tu dois être un développeur pour faire ça !")
         async with ctx.message.channel.typing():
             for m in ctx.author.guild.members:
                 self.bot.nickname_cache.set_nick(m.id, m.display_name)
@@ -25,7 +25,7 @@ class Developer(commands.Cog):
     @debuggable
     async def debug(self, ctx):
         if not self.bot.is_dev(ctx.author.id):
-            return await ctx.send("You need to be a developer to do that!")
+            return await ctx.send("Tu dois être un développeur pour faire ça !")
 
         self.bot.config["debug"] = not self.bot.config["debug"]
         await ctx.send(f"Le mode debug a été " + ("activé !" if self.bot.config["debug"] else "désactivé !"))
