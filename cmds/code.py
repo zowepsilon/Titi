@@ -84,17 +84,7 @@ class Code(commands.Cog):
                                 await state.update_message()
                                 break
 
-                            case "output/execute/wsExecuteStderr":
-                                payload = res["payload"]
-                                if payload[0] == '\r':
-                                    state.out = '\n'.join(state.out.split('\n')[:-1])
-                                    payload = payload[1:]
-
-                                state.out += payload
-                                await state.update_message()
-                                n
-
-                            case "output/execute/wsExecuteStdout":
+                            case "output/execute/wsExecuteStdout" | "output/execute/wsExecuteStderr":
                                 payload = res["payload"]
                                 if payload[0] == '\r':
                                     state.out = '\n'.join(state.out.split('\n')[:-1])
