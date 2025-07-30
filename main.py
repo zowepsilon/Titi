@@ -9,7 +9,7 @@ import aiohttp
 import discord
 from discord.ext import commands
 
-from utils import NicknameCache, WordCounter
+from utils import NicknameCache
 
 intents = discord.Intents.all()
 
