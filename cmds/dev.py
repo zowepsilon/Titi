@@ -6,6 +6,10 @@ class Developer(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    @commands.Cog.listener()
+    async def on_member_update(self, before, after):
+        self.bot.nickname_cache.set_nick(after.id, after.display_name)
+
     @commands.command()
     @debuggable
     async def reload_names(self, ctx):
