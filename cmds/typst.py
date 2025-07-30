@@ -29,7 +29,7 @@ layout = """
 """
 
 def compile_to_png(source: str) -> io.BytesIO:
-    return io.BytesIO(typst.compile(bytes(source, encoding="utf-8"), format="png", ppi=400.0))
+    return io.BytesIO(typst.compile(bytes(source, encoding="utf-8"), format="png", ppi=600.0))
 
 
 class Typst(commands.Cog):
