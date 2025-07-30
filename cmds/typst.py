@@ -128,7 +128,7 @@ class Typst(commands.Cog):
         if payload.emoji.name != '❌':
             return
 
-zsh:1: command not found: q
+        for (author_id, rendered) in self.renders.values():
             if rendered.id == payload.message_id:
 
                 if author_id == payload.user_id:
