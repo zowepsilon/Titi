@@ -1,13 +1,6 @@
 import discord
 from discord.ext import commands
 from utils import debuggable
-from rebuilder import DatabaseRebuilder
-
-import time
-import json
-import subprocess
-import os
-from io import StringIO
 
 class Developer(commands.Cog):
     def __init__(self, bot):
