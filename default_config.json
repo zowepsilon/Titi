@@ -3,6 +3,7 @@
     "database": "data.db",
     "prefix": "?",
     "run_dir": "./run",
+    "texit_id": 510789298321096704,
     "developers": [],
     "debug": false
 }

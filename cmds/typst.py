@@ -8,7 +8,7 @@ import typst
 import asyncio
 import concurrent.futures
 
-from utils import debuggable
+from utils import debuggable, TexitOptionDb
 
 layout = """
 #set page(
@@ -37,9 +37,19 @@ class Typst(commands.Cog):
         self.bot = bot
         self.repeat = True
 
+        self.db = TexitCompatDb(self.bot.cursor, "TexitCompat")
+
         self.renders: dict[int, (int, discord.Message)] = {}
 
     async def process(self, ctx, message_id: int, user_id: int, content: str):
+        disable_texit = self.db.get(user_id)
+        if disable_texit is None:
+            text = "-# Tip : utilise `?math typst` ou `?math latex` pour choisir un mode de rendu à la place d'avoir les deux."
+        elif disable_texit:
+            text = ""
+        else:
+            return
+
         if message_id in self.renders.keys():
             await self.renders[message_id][1].delete()
             del self.renders[message_id]
@@ -65,7 +75,7 @@ class Typst(commands.Cog):
             return
 
         file = discord.File(rendered, "rendered.png")
-        self.renders[message_id] = (user_id, await ctx.send(file=file))
+        self.renders[message_id] = (user_id, await ctx.send(text, file=file))
         rendered.close()
 
     @commands.command()
@@ -80,10 +90,24 @@ class Typst(commands.Cog):
         else:
             await self.process(ctx, ctx.message.id, ctx.author.id, content)
 
+    async def on_message_bot(self, message):
+        if message.author.id != self.config["texit_id"]:
+            return
+
+        if len(message.content) < 5:
+            return
+
+        if '*' == message.content[0] == message.content[1] == message.content[-1] == message.content[-2]:
+            user_id = self.bot.nickname_cache.get_user_from_nick(message.content[2:-2])
+            if self.db.get(user_id):
+                await message.delete()
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.author.bot or len(message.content) == 0 or message.content[0] == '?' or message.content.startswith(",tex"):
+        if message.author.bot:
+            return await self.on_message_bot(message)
+
+        if len(message.content) == 0 or message.content[0] == '?' or message.content.startswith(",tex"):
             return
         
         if message.content.count('$') >= 2 and message.content.count('```') == 0:
@@ -104,8 +128,7 @@ class Typst(commands.Cog):
         if payload.emoji.name != '❌':
             return
 
-        
-        for (source_id, (author_id, rendered)) in self.renders.items():
+zsh:1: command not found: q
             if rendered.id == payload.message_id:
 
                 if author_id == payload.user_id:
