@@ -22,13 +22,13 @@ layout = """
   fill: white,
 )
 
-#let fit(body) = context {
+#let fit(body) = context {{
   let (width,) = measure(body)
   let max_width = 350pt
 
-  if width > max_width {
+  if width > max_width {{
     width = max_width
-  }
+  }}
   
   block(width: width)[
     #body
