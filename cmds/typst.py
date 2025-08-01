@@ -33,7 +33,7 @@ layout = """
   block(width: width)[
     #body
   ]
-}
+}}
 
 #show: fit
 
