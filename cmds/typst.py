@@ -14,7 +14,7 @@ layout = """
 #set page(
   height: auto,
   margin: 5pt,
-  fill: none,
+  fill: rbg("#070709"),
 )
 
 #set align(left)
