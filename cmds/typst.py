@@ -13,17 +13,29 @@ from utils import debuggable, TexitCompatDb
 layout = """
 #set page(
   height: auto,
-  margin: 5pt,
+  width: auto,
+  margin: (x: 5pt, y: 10pt),
   fill: rgb("#070709"),
 )
-
-#set align(left)
-
-#set page(width: 250pt)
 
 #set text(
   fill: white,
 )
+
+#let fit(body) = context {
+  let (width,) = measure(body)
+  let max_width = 350pt
+
+  if width > max_width {
+    width = max_width
+  }
+  
+  block(width: width)[
+    #body
+  ]
+}
+
+#show: fit
 
 {}
 """
