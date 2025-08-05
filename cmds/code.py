@@ -36,6 +36,14 @@ class Code(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.repeat = True
+    
+        @commands.Cog.listener()
+
+    @commands.Cog.listener()
+    async def on_ready(self):
+        self.session = aiohttp.ClientSession()
+
+        print(f"Bot ready, logged in as {self.bot.user}.")
 
     @commands.command()
     @debuggable
@@ -46,13 +54,31 @@ class Code(commands.Cog):
 
             code = (await ctx.fetch_message(ctx.message.reference.message_id)).content
 
+        # Rust
         if code.startswith("```rust"):
-            code = code[7:-3]
-        if code.startswith("```rs"):
-            code = code[7:-3]
-        elif code.startswith("```"):
-            code = code[3:-3]
-    
+            await self.run_rust(code[7:-3])
+        elif code.startswith("```rs"):
+            await self.run_rust(code[5:-3])
+        elif code.startswith("rust"):
+            await self.run_rust(code[4:])
+        elif code.startswith("rs"):
+            await self.run_rust(code[2:])
+        
+        # Haskell
+        elif code.startswith("```haskell"):
+            await self.run_haskell(code[10:-3])
+        elif code.startswith("```hs"):
+            await self.run_haskell(code[5:-3])
+        elif code.startswith("haskell"):
+            await self.run_haskell(code[7:])
+        elif code.startswith("hs"):
+            await self.run_haskell(code[2:])
+        
+        # Inconnu
+        else:
+            await ctx.send("Langage non reconnu ! Usage :\n```\n?run <lang> <code>\n``` ou ```\n?run `​``<lang>\n<code>\n`​``\n```\navec `<lang> = rust | rs | haskell | hs`")
+
+    async def run_rust(self, ctx, code: str):
         if "fn main()" not in code:
             code = f"fn main() {{\n{code}\n}}"""
 
@@ -102,6 +128,41 @@ class Code(commands.Cog):
             except asyncio.TimeoutError:
                 state.finished = True
                 await state.update_message()
+    
+    async def run_haskell(self, ctx, code: str):
+        if "main =" not in code:
+            code += "\nmain = return ()"
+
+        code = code.replace("\\", "\\\\").replace("\n", "\\n").replace("\"", "\\\"")
+
+        message = await ctx.send("Exécution en cours...")
+        
+        url = "https://play.haskell.org/submit"
+        data = f'''{{
+            "code":"{code}",
+            "version":"9.12.2",
+            "opt":"O0",
+            "output":"run"
+        }}'''
+        
+        async with self.session.post(url, data=data) as req:
+            state = RunnerState(out="", finished=False, message=message)
+            res = await req.text()
+            res = json.loads(res)
+            
+            if res["ghcout"]:
+                state.out += res["ghcout"]
+                state.out += '\n'
+            if res["sout"]:
+                state.out += res["sout"]
+                state.out += '\n'
+            if res["serr"]:
+                state.out += "-- STDERR --"
+                state.out += res["serr"]
+            
+            state.finished = True
+            await state.update_message()
+
 
 def setup(bot):
     bot.add_cog(Code(bot))
