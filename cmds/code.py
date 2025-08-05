@@ -55,23 +55,23 @@ class Code(commands.Cog):
 
         # Rust
         if code.startswith("```rust"):
-            await self.run_rust(code[7:-3])
+            await self.run_rust(ctx, code[7:-3])
         elif code.startswith("```rs"):
-            await self.run_rust(code[5:-3])
+            await self.run_rust(ctx, code[5:-3])
         elif code.startswith("rust"):
-            await self.run_rust(code[4:])
+            await self.run_rust(ctx, code[4:])
         elif code.startswith("rs"):
-            await self.run_rust(code[2:])
+            await self.run_rust(ctx, code[2:])
         
         # Haskell
         elif code.startswith("```haskell"):
-            await self.run_haskell(code[10:-3])
+            await self.run_haskell(ctx, code[10:-3])
         elif code.startswith("```hs"):
-            await self.run_haskell(code[5:-3])
+            await self.run_haskell(ctx, code[5:-3])
         elif code.startswith("haskell"):
-            await self.run_haskell(code[7:])
+            await self.run_haskell(ctx, code[7:])
         elif code.startswith("hs"):
-            await self.run_haskell(code[2:])
+            await self.run_haskell(ctx, code[2:])
         
         # Inconnu
         else:
