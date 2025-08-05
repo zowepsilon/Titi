@@ -8,6 +8,7 @@ from dataclasses import dataclass
 import json
 import time
 import asyncio
+import aiohttp
 from websockets.asyncio.client import connect
 
 from utils import debuggable
