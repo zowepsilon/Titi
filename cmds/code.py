@@ -37,8 +37,6 @@ class Code(commands.Cog):
         self.bot = bot
         self.repeat = True
     
-        @commands.Cog.listener()
-
     @commands.Cog.listener()
     async def on_ready(self):
         self.session = aiohttp.ClientSession()
