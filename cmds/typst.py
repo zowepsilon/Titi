@@ -160,5 +160,7 @@ class Typst(commands.Cog):
         else:
             await ctx.send("Modes : `typst` et `latex`")
 
+        self.db.dbg()
+
 def setup(bot):
     bot.add_cog(Typst(bot))
