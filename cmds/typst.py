@@ -95,6 +95,7 @@ class Typst(commands.Cog):
 
         if '*' == message.content[0] == message.content[1] == message.content[-1] == message.content[-2]:
             user_id = self.bot.nickname_cache.get_user_from_nick(message.guild.id, message.content[2:-2])
+            print(f"{user_id = }")
             if self.db.get(message.guild.id, user_id):
                 await message.delete()
 
