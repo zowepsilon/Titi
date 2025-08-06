@@ -49,7 +49,7 @@ class Typst(commands.Cog):
 
         self.renders: dict[int, (int, discord.Message)] = {}
 
-    async def process(self, ctx, message_id: int, guild_id: int, user_id: int, content: str):
+    async def process(self, ctx, guild_id: int, message_id: int, user_id: int, content: str):
         disable_texit = self.db.get(guild_id, user_id)
         if disable_texit is None:
             text = "-# Tip : utilise `?math typst` ou `?math latex` pour choisir un mode de rendu à la place d'avoir les deux."
