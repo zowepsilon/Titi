@@ -25,8 +25,6 @@ def sanitize(text: str) -> str:
         .replace("<@&", "<​@​&​")
 
 
-class Db:
-
 class NicknameCache:
     def __init__(self, cursor, table_name):
         self.cursor = cursor
