@@ -49,8 +49,8 @@ class Typst(commands.Cog):
 
         self.renders: dict[int, (int, discord.Message)] = {}
 
-    async def process(self, ctx, message_id: int, user_id: int, content: str):
-        disable_texit = self.db.get(user_id)
+    async def process(self, ctx, message_id: int, guild_id: int, user_id: int, content: str):
+        disable_texit = self.db.get(guild_id, user_id)
         if disable_texit is None:
             text = "-# Tip : utilise `?math typst` ou `?math latex` pour choisir un mode de rendu à la place d'avoir les deux."
         elif disable_texit:
@@ -107,7 +107,7 @@ class Typst(commands.Cog):
             return
         
         if message.content.count('$') >= 2 and message.content.count('```') == 0:
-            await self.process(message.channel, message.id, message.author.id, message.content)
+            await self.process(message.channel, message.guild.id, message.id, message.author.id, message.content)
 
     @commands.Cog.listener()
     async def on_raw_message_edit(self, payload):
@@ -117,7 +117,7 @@ class Typst(commands.Cog):
             return
 
         if message.content.count('$') >= 2 and message.content.count('```'):
-            await self.process(message.channel, message.id, message.author.id, message.content)
+            await self.process(message.channel, message.guild.id, message.id, message.author.id, message.content)
         
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
@@ -141,9 +141,9 @@ class Typst(commands.Cog):
                 return await ctx.send("Il faut répondre à un message contenant du typst ou le donner en argument !")
 
             content = (await ctx.fetch_message(ctx.message.reference.message_id)).content
-            await self.process(ctx, ctx.message.reference.message_id, ctx.author.id, content)
+            await self.process(ctx, ctx.guild.id, ctx.message.reference.message_id, ctx.author.id, content)
         else:
-            await self.process(ctx, ctx.message.id, ctx.author.id, content)
+            await self.process(ctx, ctx.guild.id, ctx.message.id, ctx.author.id, content)
             
     @commands.command()
     @debuggable
