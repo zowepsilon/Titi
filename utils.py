@@ -31,40 +31,41 @@ class NicknameCache:
 
         self.cursor.execute(f"""
             CREATE TABLE IF NOT EXISTS {self.table_name} (
-                UserId int PRIMARY KEY,
-                Name VARCHAR(255)
+                GuildId int,
+                UserId int,
+                Name VARCHAR(255),
+                PRIMARY KEY (GuildId, UserId)
             );
         """)
 
-    def get_nick(self, user_id: int) -> str:
+    def get_nick(self, guild_id: int, user_id: int) -> str:
         self.cursor.execute(f"""
             SELECT Name
             FROM {self.table_name}
-            WHERE UserId = ?;
-        """, [user_id])
+            WHERE GuildId = ?
+            AND UserId = ?;
+        """, [user_id, guild_id])
         
         result = self.cursor.fetchone()
         return "<unknown>" if result is None else result[0]
 
-    def get_user_from_nick(self, nick: str) -> int | None:
+    def get_user_from_nick(self, nick: str, guild_id: int) -> int | None:
         self.cursor.execute(f"""
             SELECT UserId
             FROM {self.table_name}
-            WHERE Name = ?;
-        """, [nick])
+            WHERE GuildId = ?
+            AND Name = ?;
+        """, [guild_id, nick])
         
         result = self.cursor.fetchone()
         return None if result is None else result[0]
 
 
-    def set_nick(self, user_id: int, name: str):
+    def set_nick(self, guild_id: int, user_id: int, nick: str):
         self.cursor.execute(f"""
-            INSERT INTO {self.table_name}
-            VALUES(?, ?)
-            ON CONFLICT(UserId)
-            DO UPDATE
-            SET Name = ?
-        """,  [user_id, name, name])
+            INSERT OR REPLACE INTO {self.table_name}
+            VALUES(?, ?, ?)
+        """,  [guild_id, user_id, nick])
 
 class TexitCompatDb:
     def __init__(self, cursor, table_name):
@@ -73,26 +74,26 @@ class TexitCompatDb:
 
         self.cursor.execute(f"""
             CREATE TABLE IF NOT EXISTS {self.table_name} (
-                UserId INT PRIMARY KEY,
-                TexitDisabled INT
+                GuildId int,
+                UserId int,
+                TexitDisabled int,
+                PRIMARY KEY (GuildId, UserId)
             );
         """)
 
-    def get(self, user_id: int) -> bool | None:
+    def get(self, guild_id: int, user_id: int) -> bool | None:
         self.cursor.execute(f"""
             SELECT TexitDisabled
             FROM {self.table_name}
-            WHERE UserId = ?;
-        """, [user_id])
+            WHERE GuildId = ?
+            AND UserId = ?;
+        """, [guild_id, user_id])
         
         result = self.cursor.fetchone()
         return None if result is None else result[0] != 0
 
-    def set(self, user_id: int, texit_disabled: bool):
+    def set(self, guild_id: int, user_id: int, texit_disabled: bool):
         self.cursor.execute(f"""
-            INSERT INTO {self.table_name}
-            VALUES(?, ?)
-            ON CONFLICT(UserId)
-            DO UPDATE
-            SET TexitDisabled = ?
-        """,  [user_id, texit_disabled, texit_disabled])
+            INSERT OR REPLACE INTO {self.table_name}
+            VALUES(?, ?, ?)
+        """,  [guild_id, user_id, texit_disabled])

@@ -8,7 +8,7 @@ class Developer(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_update(self, before, after):
-        self.bot.nickname_cache.set_nick(after.id, after.display_name)
+        self.bot.nickname_cache.set_nick(after.guild.id, after.id, after.display_name)
 
     @commands.command()
     @debuggable
@@ -17,7 +17,7 @@ class Developer(commands.Cog):
             return await ctx.send("Tu dois être un développeur pour faire ça !")
         async with ctx.message.channel.typing():
             for m in ctx.author.guild.members:
-                self.bot.nickname_cache.set_nick(m.id, m.display_name)
+                self.bot.nickname_cache.set_nick(ctx.guild.id, m.id, m.display_name)
 
             await ctx.send(f"Les noms de {len(ctx.author.guild.members)} membres ont été rechargés !")
 

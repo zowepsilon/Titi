@@ -26,11 +26,7 @@ layout = """
   let (width,) = measure(body)
   let max_width = 350pt
 
-  if width > max_width {{
-    width = max_width
-  }}
-  
-  block(width: width)[
+  block(width: calc.min(width, max_width))[
     #body
   ]
 }}
@@ -98,8 +94,8 @@ class Typst(commands.Cog):
             return
 
         if '*' == message.content[0] == message.content[1] == message.content[-1] == message.content[-2]:
-            user_id = self.bot.nickname_cache.get_user_from_nick(message.content[2:-2])
-            if self.db.get(user_id):
+            user_id = self.bot.nickname_cache.get_user_from_nick(message.guild.id, message.content[2:-2])
+            if self.db.get(message.guild.id, user_id):
                 await message.delete()
 
     @commands.Cog.listener()
@@ -142,7 +138,7 @@ class Typst(commands.Cog):
     async def typst(self, ctx, *, content: str = None):
         if content is None:
             if ctx.message.reference is None:
-                return await ctx.send("Il faut répondre à un message contenant du code ou donner le code en argument !")
+                return await ctx.send("Il faut répondre à un message contenant du typst ou le donner en argument !")
 
             content = (await ctx.fetch_message(ctx.message.reference.message_id)).content
             await self.process(ctx, ctx.message.reference.message_id, ctx.author.id, content)
@@ -155,11 +151,11 @@ class Typst(commands.Cog):
         mode = None if mode is None else mode.lower()
 
         if mode == "typst":
-            self.db.set(ctx.author.id, True)
-            await ctx.send("Tu utilises maintenant Typst !")
+            self.db.set(ctx.guild.id, ctx.author.id, True)
+            await ctx.send("Tu utilises maintenant Typst sur ce serveur !")
         elif mode == "latex" or mode == "texit":
-            self.db.set(ctx.author.id, False)
-            await ctx.send("Tu utilises maintenant LaTeX !")
+            self.db.set(ctx.guild.id, ctx.author.id, False)
+            await ctx.send("Tu utilises maintenant LaTeX sur ce serveur !")
         else:
             await ctx.send("Modes : `typst` et `latex`")
 
