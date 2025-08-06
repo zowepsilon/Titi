@@ -59,7 +59,7 @@ class Typst(commands.Cog):
             return
 
         if message_id in self.renders.keys():
-            await self.renders[message_id].delete()
+            await self.renders[message_id][1].delete()
             del self.renders[message_id]
         
         if content.startswith("?typst "):
@@ -79,7 +79,7 @@ class Typst(commands.Cog):
             
         except RuntimeError as e:
             reason = e.args[0].replace("`", "​`")
-            self.renders[message_id] = await ctx.send(f"{text}\nErreur typst:\n```{reason}```")
+            self.renders[message_id] = (user_id, await ctx.send(f"{text}\nErreur typst:\n```{reason}```"))
             return
 
         file = discord.File(rendered, "rendered.png")
