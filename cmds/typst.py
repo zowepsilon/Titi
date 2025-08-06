@@ -14,7 +14,7 @@ layout = """
 #set page(
   height: auto,
   width: auto,
-  margin: (x: 5pt, y: 10pt),
+  margin: (x: 5pt, y: 5pt),
   fill: rgb("#070709"),
 )
 
