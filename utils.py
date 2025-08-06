@@ -24,11 +24,18 @@ def sanitize(text: str) -> str:
         .replace("@everyone", "@​everyone") \
         .replace("<@&", "<​@​&​")
 
-
-class NicknameCache:
+class Database:
     def __init__(self, cursor, table_name):
         self.cursor = cursor
         self.table_name = table_name
+
+    def dbg(self):
+        self.cursor.execute(f"""SELECT * FROM {self.table_name}""")
+        print(self.cursor.fetchall())
+
+class NicknameCache(Database):
+    def __init__(self, cursor, table_name):
+        super().__init__(cursor, table_name)
 
         self.cursor.execute(f"""
             CREATE TABLE IF NOT EXISTS {self.table_name} (
@@ -71,10 +78,9 @@ class NicknameCache:
             SET Name = ?;
         """,  [guild_id, user_id, nick, nick])
 
-class TexitCompatDb:
+class TexitCompatDb(Database):
     def __init__(self, cursor, table_name):
-        self.cursor = cursor
-        self.table_name = table_name
+        super().__init__(cursor, table_name)
 
         self.cursor.execute(f"""
             CREATE TABLE IF NOT EXISTS {self.table_name} (
@@ -104,7 +110,3 @@ class TexitCompatDb:
             DO UPDATE
             SET TexitDisabled = ?;
         """,  [guild_id, user_id, texit_disabled, texit_disabled])
-
-    def dbg(self):
-        self.cursor.execute(f"""SELECT * FROM {self.table_name}""")
-        print(self.cursor.fetchall())

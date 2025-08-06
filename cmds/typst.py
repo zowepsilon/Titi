@@ -51,6 +51,7 @@ class Typst(commands.Cog):
 
     async def process(self, ctx, guild_id: int, message_id: int, user_id: int, content: str):
         disable_texit = self.db.get(guild_id, user_id)
+        print(f"{disable_texit = }")
         if disable_texit is None:
             text = "-# Tip : utilise `?math typst` ou `?math latex` pour choisir un mode de rendu à la place d'avoir les deux."
         elif disable_texit:
@@ -96,6 +97,7 @@ class Typst(commands.Cog):
         if '*' == message.content[0] == message.content[1] == message.content[-1] == message.content[-2]:
             user_id = self.bot.nickname_cache.get_user_from_nick(message.guild.id, message.content[2:-2])
             print(f"{user_id = }")
+            self.bot.nickname_cache.dbg()
             if self.db.get(message.guild.id, user_id):
                 await message.delete()
 
