@@ -63,9 +63,12 @@ class NicknameCache:
 
     def set_nick(self, guild_id: int, user_id: int, nick: str):
         self.cursor.execute(f"""
-            INSERT OR REPLACE INTO {self.table_name}
+            INSERT INTO {self.table_name}
             VALUES(?, ?, ?)
-        """,  [guild_id, user_id, nick])
+            ON CONFLICT
+            DO UPDATE
+            SET Name = ?;
+        """,  [guild_id, user_id, nick, nick])
 
 class TexitCompatDb:
     def __init__(self, cursor, table_name):
@@ -94,6 +97,9 @@ class TexitCompatDb:
 
     def set(self, guild_id: int, user_id: int, texit_disabled: bool):
         self.cursor.execute(f"""
-            INSERT OR REPLACE INTO {self.table_name}
+            INSERT INTO {self.table_name}
             VALUES(?, ?, ?)
-        """,  [guild_id, user_id, texit_disabled])
+            ON CONFLICT
+            DO UPDATE
+            SET TexitDisabled = ?;
+        """,  [guild_id, user_id, texit_disabled, texit_disabled])
