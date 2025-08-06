@@ -32,7 +32,6 @@ layout = """
 }}
 
 #show: fit
-
 {}
 """
 
