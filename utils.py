@@ -57,7 +57,7 @@ class NicknameCache(Database):
         result = self.cursor.fetchone()
         return "<unknown>" if result is None else result[0]
 
-    def get_user_from_nick(self, nick: str, guild_id: int) -> int | None:
+    def get_user_from_nick(self, guild_id: int, nick: str) -> int | None:
         self.cursor.execute(f"""
             SELECT UserId
             FROM {self.table_name}
