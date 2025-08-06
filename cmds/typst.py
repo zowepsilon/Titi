@@ -59,7 +59,7 @@ class Typst(commands.Cog):
             return
 
         if message_id in self.renders.keys():
-            await self.renders[message_id][1].delete()
+            await self.renders[message_id].delete()
             del self.renders[message_id]
         
         if content.startswith("?typst "):
