@@ -115,7 +115,7 @@ class Typst(commands.Cog):
         if message.author.bot or len(message.content) == 0 or message.content[0] == '?':
             return
 
-        if message.content.count('$') >= 2 and message.content.count('```'):
+        if message.content.count('$') >= 2 and message.content.count('```') == 0:
             await self.process(message.channel, message.guild.id, message.id, message.author.id, message.content)
         
     @commands.Cog.listener()
