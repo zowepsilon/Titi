@@ -70,8 +70,15 @@ class Typst(commands.Cog):
             content = content[3:]
         elif content.startswith("$$"):
             content = content[2:]
+
+        def process(m):
+            user_id = int(m.group(1))
+            print(f"{user_id = }")
+            nick = self.bot.nickname_cache.get_user_from_nick(guild_id, int(m.group(1)))
+            print(f"{nick = }")
+            print(f"{nick = }")
             
-        content = re.sub(tag_regex, lambda m: '`@'+self.bot.nickname_cache.get_user_from_nick(guild_id, int(m.group(1))).replace(r'\`')+'`', content)
+        content = re.sub(tag_regex, lambda m: '`@'+self.bot.nickname_cache.get_user_from_nick(guild_id, int(m.group(1))).replace('`', r'\`')+'`', content)
 
         source = layout.format(content)
         
