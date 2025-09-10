@@ -7,6 +7,7 @@ import io
 import typst
 import asyncio
 import concurrent.futures
+import re
 
 from utils import debuggable, TexitCompatDb
 
@@ -34,6 +35,8 @@ layout = """
 #show: fit
 {}
 """
+
+tag_regex = re.compile(r"<@([0-9]+)>")
 
 def compile_to_png(source: str) -> io.BytesIO:
     return io.BytesIO(typst.compile(bytes(source, encoding="utf-8"), format="png", ppi=400.0))
@@ -68,6 +71,7 @@ class Typst(commands.Cog):
         elif content.startswith("$$"):
             content = content[2:]
             
+        content = re.sub(tag_regex, lambda m: '`@'+self.bot.nickname_cache.get_user_from_nick(guild_id, int(m.group(1))).replace(r'\`')+'`', content)
 
         source = layout.format(content)
         
