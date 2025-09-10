@@ -76,9 +76,12 @@ class Typst(commands.Cog):
             print(f"{user_id = }")
             nick = self.bot.nickname_cache.get_user_from_nick(guild_id, int(m.group(1)))
             print(f"{nick = }")
+            nick = nick.replace('`', r'\`')
             print(f"{nick = }")
+
+            return f"`@{nick}`"
             
-        content = re.sub(tag_regex, lambda m: '`@'+self.bot.nickname_cache.get_user_from_nick(guild_id, int(m.group(1))).replace('`', r'\`')+'`', content)
+        content = re.sub(tag_regex, process, content)
 
         source = layout.format(content)
         
