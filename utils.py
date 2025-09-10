@@ -52,7 +52,7 @@ class NicknameCache(Database):
             FROM {self.table_name}
             WHERE GuildId = ?
             AND UserId = ?;
-        """, [user_id, guild_id])
+        """, [guild_id, user_id])
         
         result = self.cursor.fetchone()
         return "<unknown>" if result is None else result[0]
