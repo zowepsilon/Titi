@@ -97,6 +97,7 @@ class Typst(commands.Cog):
             return
     
         name = message.content.split('\n')[0]
+        print(message.content.split('\n'), name)
         
         if '*' == name[0] == name[1] == name[-1] == name[-2]:
             user_id = self.bot.nickname_cache.get_user_from_nick(message.guild.id, message.content[2:-2])
