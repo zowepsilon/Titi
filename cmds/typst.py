@@ -74,7 +74,7 @@ class Typst(commands.Cog):
         def process(m):
             user_id = int(m.group(1))
             print(f"{user_id = }")
-            nick = self.bot.nickname_cache.get_user_from_nick(guild_id, int(m.group(1)))
+            nick = self.bot.nickname_cache.get_nick(guild_id, int(m.group(1)))
             print(f"{nick = }")
             nick = nick.replace('`', r'\`')
             print(f"{nick = }")
