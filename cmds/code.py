@@ -60,7 +60,7 @@ class Code(commands.Cog):
             code = code[1:-1]
 
         if code.startswith("rs"):
-            langage = "rs"
+            language = "rs"
             code = code[2:]
         elif code.startswith("rust"):
             language = "rs"
@@ -75,7 +75,7 @@ class Code(commands.Cog):
             await ctx.send("Langage non reconnu ! Usage :\n```\n?run <lang> <code>\n``` ou ```\n?run `​``<lang>\n<code>\n`​``\n```\navec `<lang> = rust | rs | haskell | hs`")
             return
 
-        if langage == "rs":
+        if language == "rs":
             await self.run_rust(ctx, code)
         elif language == "hs":
             await self.run_haskell(ctx, code)
