@@ -59,6 +59,9 @@ class Code(commands.Cog):
         elif code.startswith("`") and code.endswith("`"):
             code = code[1:-1]
 
+        code = code.strip()
+
+        language = None
         if code.startswith("rs"):
             language = "rs"
             code = code[2:]
@@ -71,7 +74,13 @@ class Code(commands.Cog):
         elif code.startswith("haskell"):
             language = "hs"
             code = code[7:]
-        else:
+
+        code = code.strip()
+
+        if code.startswith("`") and code.endswith("`"):
+            code = code[1:-1]
+
+        if language is None:
             await ctx.send("Langage non reconnu ! Usage :\n```\n?run <lang> <code>\n``` ou ```\n?run `​``<lang>\n<code>\n`​``\n```\navec `<lang> = rust | rs | haskell | hs`")
             return
 
