@@ -53,29 +53,34 @@ class Code(commands.Cog):
 
             code = (await ctx.fetch_message(ctx.message.reference.message_id)).content
 
-        # Rust
-        if code.startswith("```rust"):
-            await self.run_rust(ctx, code[7:-3])
-        elif code.startswith("```rs"):
-            await self.run_rust(ctx, code[5:-3])
+
+        if code.startswith("```") and code.endswith("```"):
+            code = code[3:-3]
+        elif code.startswith("`") and code.endswith("`"):
+            code = code[1:-1]
+
+        if code.startswith("rs"):
+            langage = "rs"
+            code = code[2:]
         elif code.startswith("rust"):
-            await self.run_rust(ctx, code[4:])
-        elif code.startswith("rs"):
-            await self.run_rust(ctx, code[2:])
-        
-        # Haskell
-        elif code.startswith("```haskell"):
-            await self.run_haskell(ctx, code[10:-3])
-        elif code.startswith("```hs"):
-            await self.run_haskell(ctx, code[5:-3])
-        elif code.startswith("haskell"):
-            await self.run_haskell(ctx, code[7:])
+            language = "rs"
+            language = code[4:]
         elif code.startswith("hs"):
-            await self.run_haskell(ctx, code[2:])
-        
-        # Inconnu
+            language = "hs"
+            language = code[2:]
+        elif code.startswith("haskell"):
+            language = "hs"
+            code = code[7:]
         else:
             await ctx.send("Langage non reconnu ! Usage :\n```\n?run <lang> <code>\n``` ou ```\n?run `​``<lang>\n<code>\n`​``\n```\navec `<lang> = rust | rs | haskell | hs`")
+            return
+
+        if langage == "rs":
+            await self.run_rust(ctx, code)
+        elif language == "hs":
+            await self.run_haskell(ctx, code)
+        else:
+            await ctx.send("Internal error")
 
     async def run_rust(self, ctx, code: str):
         if "fn main()" not in code:
