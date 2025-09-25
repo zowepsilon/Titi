@@ -38,6 +38,7 @@ layout = """
 
 tag_regex = re.compile(r"<@([0-9]+)>")
 
+
 def compile_to_png(source: str) -> io.BytesIO:
     return io.BytesIO(typst.compile(bytes(source, encoding="utf-8"), format="png", ppi=400.0))
 
