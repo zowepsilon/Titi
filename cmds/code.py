@@ -130,7 +130,7 @@ class Code(commands.Cog):
     
     async def run_haskell(self, ctx, code: str):
         if "main =" not in code:
-            code = "\nmain = putStrLn (show ({code}))"
+            code = f"main = putStrLn (show ({code}))"
 
         code = code.replace("\\", "\\\\").replace("\n", "\\n").replace("\"", "\\\"")
 
