@@ -67,10 +67,10 @@ class Code(commands.Cog):
             code = code[2:]
         elif code.startswith("rust"):
             language = "rs"
-            language = code[4:]
+            code = code[4:]
         elif code.startswith("hs"):
             language = "hs"
-            language = code[2:]
+            code = code[2:]
         elif code.startswith("haskell"):
             language = "hs"
             code = code[7:]
