@@ -10,6 +10,10 @@ class Developer(commands.Cog):
     async def on_member_update(self, before, after):
         self.bot.nickname_cache.set_nick(after.guild.id, after.id, after.display_name)
 
+    @commands.Cog.listener()
+    async def on_member_join(self, member):
+        self.bot.nickname_cache.set_nick(member.guild.id, member.id, member.display_name)
+
     @commands.command()
     @debuggable
     async def reload_names(self, ctx):
