@@ -40,13 +40,13 @@ class Developer(commands.Cog):
         if not self.bot.is_dev(ctx.author.id):
             return await ctx.send("Tu dois être une développeuse pour faire ça ! 🏳️‍⚧️")
 
-        out = f"### Serveurs\n"
+        out = f"## Serveurs\n"
         count = 0
         for g in self.bot.guilds:
             count += g.member_count
-            out += f"{g.name} - {g.member_count} membres\n"
+            out += f"- {g.name} - {g.member_count} membres\n"
 
-        out += f"Total : {self.bot.guilds} serveurs, {count} membres"
+        out += f"- Total : {len(self.bot.guilds)} serveurs, {count} membres"
         await ctx.send(out)
 
 def setup(bot): 
