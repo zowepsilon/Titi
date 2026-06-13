@@ -11,7 +11,8 @@ from discord.ext import commands
 
 from utils import NicknameCache
 
-intents = discord.Intents.all()
+intents = discord.Intents.default()
+intents.message_content = True
 
 class Bot(commands.Bot):
     SOURCE = os.path.dirname(os.path.realpath(__file__))
