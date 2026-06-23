@@ -11,7 +11,7 @@ from discord.ext import commands
 
 from utils import NicknameCache
 
-intents = discord.Intents.all()
+intents = discord.Intents.default()
 intents.message_content = True
 intents.moderation = True
 
